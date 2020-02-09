@@ -1,6 +1,6 @@
 {
   "shouldShow": true,
-  "name": "Image Statistics",
+  "name": "Image Drawer",
   "images": {
     "basePath": ".csmarket/img",
     "featured": "featured.png",
@@ -8,12 +8,10 @@
   },
   "highlights": [
     "a good first feature",
-    "does some really cool stuff",
-    "your mom would like it"
+    "does some really cool stuff"
   ],
   "category": "Overlay",
   "tags": ["tool", "overlay"],
-  "buyMeACoffee": "dannyrb",
   "compatibleWith": [
     {
       "name": "cornerstone-tools",

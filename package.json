@@ -1,15 +1,15 @@
 {
-  "name": "@qsolutionsllc/cornerstone-tool-image-statistics",
-  "version": "1.0.3",
-  "description": "Example project",
+  "name": "cornerstone-tool-image-drawer",
+  "version": "1.0.0",
+  "description": "Image Drawer",
   "main": "dist/index.js",
   "module": "src/index.js",
   "files": [
-    "dist/image-statistics.js",
+    "dist/image-drawer.js",
     "src/"
   ],
   "scripts": {
-    "build": "webpack && cpx dist/image-statistics.js example",
+    "build": "webpack && cpx dist/image-drawer.js example",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npm run build && webpack-dev-server",
     "contributors:add": "all-contributors add",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/QSolutionsLLC/cornerstone-tool-image-statistics.git"
+    "url": "git+https://github.com/pierreleguen/cornerstone-tool-image-drawer.git"
   },
   "keywords": [
     "cornerstone",
@@ -26,12 +26,12 @@
     "plugin",
     "medical imaging"
   ],
-  "author": "Danny Brown",
+  "author": "Pierre Le Guen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/QSolutionsLLC/cornerstone-tool-image-statistics/issues"
+    "url": "https://github.com/pierreleguen/cornerstone-tool-image-drawer/issues"
   },
-  "homepage": "https://github.com/QSolutionsLLC/cornerstone-tool-image-statistics#readme",
+  "homepage": "https://github.com/pierreleguen/cornerstone-tool-image-drawer#readme",
   "devDependencies": {
     "@babel/core": "7.2.x",
     "@babel/preset-env": "7.2.x",

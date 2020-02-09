@@ -1,21 +1,26 @@
-import cornerstone from 'cornerstone-core';
-import { import as csTools, toolColors } from 'cornerstone-tools';
+import cornerstone from "cornerstone-core";
+import { import as csTools, toolColors } from "cornerstone-tools";
 
-const BaseTool = csTools('base/BaseTool');
-const drawTextBox = csTools('drawing/drawTextBox');
-const getNewContext = csTools('drawing/getNewContext');
+const BaseTool = csTools("base/BaseTool");
+const drawTextBox = csTools("drawing/drawTextBox");
+const drawPath = csTools("drawing/path");
+const getNewContext = csTools("drawing/getNewContext");
 
-export default class ImageStatistics extends BaseTool {
+export default class ImageDrawer extends BaseTool {
   constructor(configuration = {}) {
     const defaultConfig = {
-      name: 'ImageStatistics',
-      mixins: ['enabledOrDisabledBinaryTool']
+      name: "ImageDrawer",
+      mixins: ["enabledOrDisabledBinaryTool"]
     };
+
     const initialConfiguration = Object.assign(defaultConfig, configuration);
 
     super(initialConfiguration);
 
-    this.initialConfiguration = initialConfiguration;
+    this.initialConfigxuration = initialConfiguration;
+
+    this.img = new Image(300, 300);
+    this.img.src = "https://image.flaticon.com/icons/svg/2531/2531249.svg";
   }
 
   enabledCallback() {
@@ -51,5 +56,19 @@ export default class ImageStatistics extends BaseTool {
     });
 
     drawTextBox(context, textLines, 0, 0, color);
+
+    const options = {
+      color: "#ff0000",
+      lineWidth: 5,
+      fillStyle: "blue",
+      lineDash: [5, 15]
+    };
+    /*drawPath(context, options, ctx => {
+      ctx.ellipse(100, 100, 50, 75, Math.PI / 4, 0, 2 * Math.PI);
+    });*/
+
+    drawPath(context, options, ctx => {
+      ctx.drawImage(this.img, 0, 0);
+    });
   }
 }
