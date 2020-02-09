@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'image-drawer.js',
-    library: 'ImageDrawer',
+    library: 'ImageDrawerTool',
     libraryTarget: 'umd'
   },
   /**
