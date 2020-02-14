@@ -4,7 +4,7 @@ import cornerstoneTools from 'cornerstone-tools';
 const BaseAnnotationTool = cornerstoneTools.import('base/BaseAnnotationTool');
 const drawPath = cornerstoneTools.import('drawing/path');
 const getNewContext = cornerstoneTools.import('drawing/getNewContext');
-
+const moveNewHandle = cornerstoneTools.import('manipulators/moveNewHandle');
 
 export default class ImageDrawerTool extends BaseAnnotationTool {
   constructor(props = {}) {
@@ -42,6 +42,70 @@ export default class ImageDrawerTool extends BaseAnnotationTool {
     }
   }
 
+  addNewMeasurement(evt) {
+    const eventData = evt.detail;
+    const {element, image} = eventData;
+
+    const measurementData = this.createNewMeasurement(eventData);
+
+    cornerstoneTools.addToolState(element, this.name, measurementData); //addToolState(element, toolType, measurementData)
+    const { end } = measurementData.handles;
+    cornerstone.updateImage(element);
+
+    console.log(image);
+
+  }
+
+  createNewMeasurement(eventData) {
+    const validEventData = eventData && eventData.currentPoints && eventData.currentPoints.image;
+
+    if (!validEventData) {
+      console.error('err: createNewMeasurement');
+      return;
+
+    }
+
+    return {
+      visible: true,
+      active: true,
+      color: undefined,
+      invalidated: true,
+      shortestDistance: 0,
+      handles: {
+        start: {
+          x: eventData.currentPoints.image.x,
+          y: eventData.currentPoints.image.y,
+          highlight: true,
+          active: false,
+          key: 'start',
+        },
+        end: {
+          x: eventData.currentPoints.image.x,
+          y: eventData.currentPoints.image.y,
+          highlight: true,
+          active: true,
+          key: 'end',
+        },
+        perpendicularPoint: {
+          x: eventData.currentPoints.image.x,
+          y: eventData.currentPoints.image.y,
+          highlight: true,
+          active: false,
+          isFirst: true,
+          key: 'perpendicular',
+        },
+        initialRotation: eventData.viewport.rotation,
+        textBox: {
+          active: false,
+          hasMoved: false,
+          movesIndependently: false,
+          drawnIndependently: true,
+          allowedOutsideImage: true,
+          hasBoundingBox: true,
+        },
+      },
+    };
+  }
 
   renderToolData(evt) {
     const eventData = evt.detail;
@@ -61,4 +125,20 @@ export default class ImageDrawerTool extends BaseAnnotationTool {
       ctx.drawImage(this.img, 0, 0);
     });
   }
+
+  pointNearTool(element, data, coords, interactionType = 'mouse') {
+    const hasStartAndEndHandles =
+      data && data.handles && data.handles.start && data.handles.end;
+    if (!hasStartAndEndHandles) {
+      // TODO(pleguen): error handle
+    }
+
+    if (data.visible == false) {
+      return false;
+    }
+
+    // const dist = interactionType === 'mouse' ? 15 : 25;
+    console.log(interactionType);
+  }
+
 }
