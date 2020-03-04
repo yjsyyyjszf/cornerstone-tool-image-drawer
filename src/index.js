@@ -1,10 +1,13 @@
 // import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
+import drawSvg from './drawSvg';
 
 const { cornerstone } = window;
 
 const BaseAnnotationTool = cornerstoneTools.import('base/BaseAnnotationTool');
-const drawPath = cornerstoneTools.import('drawing/path');
+const draw = cornerstoneTools.import('drawing/draw');
+const setShadow = cornerstoneTools.import('drawing/setShadow')
+const getPixelSpacing = cornerstoneTools.import('util/getPixelSpacing');
 const getNewContext = cornerstoneTools.import('drawing/getNewContext');
 const moveNewHandle = cornerstoneTools.import('manipulators/moveNewHandle');
 const anyHandlesOutsideImage = cornerstoneTools.import(
@@ -27,8 +30,8 @@ export default class ImageDrawerTool extends BaseAnnotationTool {
 
     super(initialConfiguration);
 
-    this.img = new Image(300, 300);
-    this.img.src = 'https://image.flaticon.com/icons/svg/2531/2531249.svg';
+    this.img = new Image();
+    this.img.src = 'https://svgshare.com/i/HzL.svg';
   }
 
   addNewMeasurement(evt) {
@@ -123,21 +126,44 @@ export default class ImageDrawerTool extends BaseAnnotationTool {
   }
 
   renderToolData(evt) {
+    const toolData = cornerstoneTools.getToolState(evt.currentTarget, this.name);
+    if (!toolData) {
+      return
+    }
+
     const eventData = evt.detail;
-    const {canvasContext} = eventData;
+    const { image, element } = eventData;
+    const context = getNewContext(eventData.canvasContext.canvas);
+    const { handleRadius, drawHandlesOnHover } = this.configuration;
+    const { rowPixelSpacing, colPixelSpacing } = getPixelSpacing(image);
 
-    const context = getNewContext(canvasContext.canvas);
+    // Meta
+    const seriesModule =
+      cornerstone.metaData.get('generalSeriesModule', image.imageId) || {};
 
+    // Pixel Spacing
+    const modality = seriesModule.modality;
+    const hasPixelSpacing = rowPixelSpacing && colPixelSpacing;
 
-    const options = {
-      color: '#ff0000',
-      lineWidth: 5,
-      fillStyle: 'blue',
-      lineDash: [5, 15]
-    };
+    draw(context, (context) => {
+      for (let i = 0; i < toolData.data.length; i++) {
+        const data = toolData.data[i];
 
-    drawPath(context, options, ctx => {
-      ctx.drawImage(this.img, 0, 0);
+        if (data.visible === false) {
+          continue;
+        }
+
+        const color = cornerstoneTools.toolColors.getColorIfActive(data);
+        const handleOptions = {
+          color,
+          handleRadius,
+          drawHandlesIfActive: drawHandlesOnHover,
+        };
+
+        setShadow(context, this.configuration);
+
+        drawSvg(context, element, this.img, data.handles.start, data.handles.end,data.handles.perpendicularPoint, {color}, 'pixel', data.handles.initialRotation);
+      }
     });
   }
 
